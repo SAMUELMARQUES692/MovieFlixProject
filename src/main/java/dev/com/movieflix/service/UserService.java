@@ -7,6 +7,9 @@ import dev.com.movieflix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,4 +22,12 @@ public class UserService {
         user = repository.save(user);
         return mapper.map(user);
     }
+
+    public List<UserDTO> listarUsuarios() {
+         List<UserModel> user = repository.findAll();
+         return user.stream()
+                 .map(mapper::map)
+                 .collect(Collectors.toList());
+    }
+
 }
