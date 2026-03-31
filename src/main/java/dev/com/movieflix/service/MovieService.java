@@ -42,7 +42,8 @@ public class MovieService {
     }
 
     public List<Movie> buscarPorCategoria(Long categoryId) {
-        return repository.findMovieByCategories(List.of(Category.builder().id(categoryId).build()));
+        Category category = Category.builder().id(categoryId).build();
+        return repository.findMovieByCategoriesIn(List.of(category));
     }
 
     public Optional<Movie> buscarId(Long id) {
