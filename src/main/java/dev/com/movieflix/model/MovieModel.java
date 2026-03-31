@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "movie")
-public class Movie {
+public class MovieModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,12 +46,12 @@ public class Movie {
     @JoinTable(name = "movie_category",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
+    private List<CategoryModel> categories;
 
     @ManyToMany
     @JoinTable(name = "movie_streaming",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "streaming_id"))
-    private List<Streaming> streamings;
+    private List<StreamingModel> streamings;
 
 }

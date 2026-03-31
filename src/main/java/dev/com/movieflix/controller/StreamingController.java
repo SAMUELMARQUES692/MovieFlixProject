@@ -3,7 +3,7 @@ package dev.com.movieflix.controller;
 import dev.com.movieflix.dto.request.StreamingRequest;
 import dev.com.movieflix.dto.response.StreamingResponse;
 import dev.com.movieflix.mapper.StreamingMapper;
-import dev.com.movieflix.model.Streaming;
+import dev.com.movieflix.model.StreamingModel;
 import dev.com.movieflix.service.StreamingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,8 +31,8 @@ public class StreamingController {
 
     @PostMapping
     public ResponseEntity<StreamingResponse> cadastrarStreaming(@RequestBody StreamingRequest request) {
-        Streaming newStreming = StreamingMapper.toStreaming(request);
-        Streaming saveStreming = service.cadastrarStreaming(newStreming);
+        StreamingModel newStreming = StreamingMapper.toStreaming(request);
+        StreamingModel saveStreming = service.cadastrarStreaming(newStreming);
         var streaming = StreamingMapper.toStreamingResponse(saveStreming);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(streaming);

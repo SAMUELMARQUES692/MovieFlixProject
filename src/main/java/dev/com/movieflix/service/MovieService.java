@@ -1,8 +1,8 @@
 package dev.com.movieflix.service;
 
-import dev.com.movieflix.model.Category;
-import dev.com.movieflix.model.Movie;
-import dev.com.movieflix.model.Streaming;
+import dev.com.movieflix.model.CategoryModel;
+import dev.com.movieflix.model.MovieModel;
+import dev.com.movieflix.model.StreamingModel;
 import dev.com.movieflix.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,34 +19,34 @@ public class MovieService {
     private final CategoryService categoryService;
     private final StreamingService streamingService;
 
-    public Movie salvar(Movie movie) {
+    public MovieModel salvar(MovieModel movie) {
        movie.setCategories(this.acharCategorias(movie.getCategories()));
        movie.setStreamings(this.acharStreaming(movie.getStreamings()));
         return repository.save(movie);
     }
 
-    public List<Movie> listarTodos() {
+    public List<MovieModel> listarTodos() {
         return repository.findAll();
     }
 
-    private List<Category> acharCategorias(List<Category> categories) {
-        List<Category> categoriesFound = new ArrayList<>();
+    private List<CategoryModel> acharCategorias(List<CategoryModel> categories) {
+        List<CategoryModel> categoriesFound = new ArrayList<>();
         categories.forEach(category -> categoryService.buscarPorId(category.getId()).ifPresent(categoriesFound::add));
         return categoriesFound;
     }
 
-    private List<Streaming> acharStreaming(List<Streaming> streamings) {
-        List<Streaming> streamingsFound = new ArrayList<>();
+    private List<StreamingModel> acharStreaming(List<StreamingModel> streamings) {
+        List<StreamingModel> streamingsFound = new ArrayList<>();
         streamings.forEach(streaming -> streamingService.buscarPorId(streaming.getId()).ifPresent(streamingsFound::add));
         return streamingsFound;
     }
 
-    public List<Movie> buscarPorCategoria(Long categoryId) {
-        Category category = Category.builder().id(categoryId).build();
+    public List<MovieModel> buscarPorCategoria(Long categoryId) {
+        CategoryModel category = CategoryModel.builder().id(categoryId).build();
         return repository.findMovieByCategoriesIn(List.of(category));
     }
 
-    public Optional<Movie> buscarId(Long id) {
+    public Optional<MovieModel> buscarId(Long id) {
         return repository.findById(id);
     }
 
@@ -54,14 +54,14 @@ public class MovieService {
         repository.deleteById(id);
     }
 
-   public Optional<Movie> atualizar(Long id, Movie updateMovie) {
-       Optional<Movie> optionalMovie = repository.findById(id);
+   public Optional<MovieModel> atualizar(Long id, MovieModel updateMovie) {
+       Optional<MovieModel> optionalMovie = repository.findById(id);
        if (optionalMovie.isPresent()) {
 
-           List<Category> categories = this.acharCategorias(updateMovie.getCategories());
-           List<Streaming> streamings = this.acharStreaming(updateMovie.getStreamings());
+           List<CategoryModel> categories = this.acharCategorias(updateMovie.getCategories());
+           List<StreamingModel> streamings = this.acharStreaming(updateMovie.getStreamings());
 
-           Movie movie = optionalMovie.get();
+           MovieModel movie = optionalMovie.get();
            movie.setTitle(updateMovie.getTitle());
            movie.setDescription(updateMovie.getDescription());
            movie.setReleaseDate(updateMovie.getReleaseDate());

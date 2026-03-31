@@ -3,7 +3,7 @@ package dev.com.movieflix.controller;
 import dev.com.movieflix.dto.request.MovieRequest;
 import dev.com.movieflix.dto.response.MovieResponse;
 import dev.com.movieflix.mapper.MovieMapper;
-import dev.com.movieflix.model.Movie;
+import dev.com.movieflix.model.MovieModel;
 import dev.com.movieflix.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class MovieController {
 
     @PostMapping
     public ResponseEntity<MovieResponse> salvar(@RequestBody MovieRequest request) {
-       Movie savedMovie = service.salvar(MovieMapper.toMovie(request));
+       MovieModel savedMovie = service.salvar(MovieMapper.toMovie(request));
         var saveConvertido = MovieMapper.toMovieResponse(savedMovie);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saveConvertido);

@@ -1,6 +1,6 @@
 package dev.com.movieflix.service;
 
-import dev.com.movieflix.model.Category;
+import dev.com.movieflix.model.CategoryModel;
 import dev.com.movieflix.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,15 @@ public class CategoryService {
 
     private final CategoryRepository repository;
 
-    public List<Category> listarTodos() {
+    public List<CategoryModel> listarTodos() {
        return repository.findAll();
     }
 
-    public Category cadastrarCategoria(Category category) {
+    public CategoryModel cadastrarCategoria(CategoryModel category) {
         return repository.save(category);
     }
 
-    public Optional<Category> buscarPorId(Long id) {
+    public Optional<CategoryModel> buscarPorId(Long id) {
        return repository.findById(id);
     }
 

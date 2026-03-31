@@ -3,7 +3,7 @@ package dev.com.movieflix.controller;
 import dev.com.movieflix.dto.request.CategoryRequest;
 import dev.com.movieflix.dto.response.CategoryResponse;
 import dev.com.movieflix.mapper.CategoryMapper;
-import dev.com.movieflix.model.Category;
+import dev.com.movieflix.model.CategoryModel;
 import dev.com.movieflix.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,8 +31,8 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> cadastrarCategoria(@RequestBody CategoryRequest request) {
-        Category newCategory = CategoryMapper.toCategory(request);
-        Category saveCategory = service.cadastrarCategoria(newCategory);
+        CategoryModel newCategory = CategoryMapper.toCategory(request);
+        CategoryModel saveCategory = service.cadastrarCategoria(newCategory);
         var categories = CategoryMapper.toCategoryResponse(saveCategory);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(categories);

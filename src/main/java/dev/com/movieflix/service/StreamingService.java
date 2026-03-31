@@ -1,6 +1,6 @@
 package dev.com.movieflix.service;
 
-import dev.com.movieflix.model.Streaming;
+import dev.com.movieflix.model.StreamingModel;
 import dev.com.movieflix.repository.StreamingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,15 @@ public class StreamingService {
 
     private final StreamingRepository repository;
 
-    public List<Streaming> listarTodos() {
+    public List<StreamingModel> listarTodos() {
         return repository.findAll();
     }
 
-    public Streaming cadastrarStreaming(Streaming streaming) {
+    public StreamingModel cadastrarStreaming(StreamingModel streaming) {
         return repository.save(streaming);
     }
 
-    public Optional<Streaming> buscarPorId(Long id) {
+    public Optional<StreamingModel> buscarPorId(Long id) {
         return repository.findById(id);
     }
 

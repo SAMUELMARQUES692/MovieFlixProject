@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "streaming")
-public class Streaming {
+public class StreamingModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

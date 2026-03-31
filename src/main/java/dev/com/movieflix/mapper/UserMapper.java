@@ -1,15 +1,15 @@
 package dev.com.movieflix.mapper;
 
 import dev.com.movieflix.dto.UserDTO;
-import dev.com.movieflix.model.User;
+import dev.com.movieflix.model.UserModel;
 import org.springframework.stereotype.Component;
 
 @Component
 public record UserMapper() {
 
-    public User map(UserDTO userDTO) {
+    public UserModel map(UserDTO userDTO) {
 
-        User user = new User();
+        UserModel user = new UserModel();
         user.setId(userDTO.id());
         user.setName(userDTO.name());
         user.setEmail(userDTO.email());
@@ -18,7 +18,7 @@ public record UserMapper() {
         return user;
     }
 
-    public UserDTO map(User user) {
+    public UserDTO map(UserModel user) {
 
         return new UserDTO(
                 user.getId(),
