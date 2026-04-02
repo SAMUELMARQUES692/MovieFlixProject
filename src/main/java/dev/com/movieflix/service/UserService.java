@@ -5,6 +5,7 @@ import dev.com.movieflix.mapper.UserMapper;
 import dev.com.movieflix.model.UserModel;
 import dev.com.movieflix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +17,12 @@ public class UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDTO cadastrarUsuario(UserDTO userDTO) {
         UserModel user = mapper.map(userDTO);
+        String password = user.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
         user = repository.save(user);
         return mapper.map(user);
     }
@@ -29,5 +33,11 @@ public class UserService {
                  .map(mapper::map)
                  .collect(Collectors.toList());
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
+
+
 
 }
