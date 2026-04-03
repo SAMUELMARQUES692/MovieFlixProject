@@ -2,62 +2,42 @@ package dev.com.movieflix.controller;
 
 import dev.com.movieflix.dto.request.StreamingRequest;
 import dev.com.movieflix.dto.response.StreamingResponse;
-import dev.com.movieflix.mapper.StreamingMapper;
-import dev.com.movieflix.model.StreamingModel;
-import dev.com.movieflix.service.StreamingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/movieflix/streaming")
-@RequiredArgsConstructor
-public class StreamingController {
+@Tag(name = "Streaming", description = "Recurso responsavel pelo gerenciamento dos Serviços de Streaming")
+public interface StreamingController {
 
-    private final StreamingService service;
+    @Operation(summary = "Busca Serviços de Streaming", description = "Metodo responsavel por buscar todos os serviços de streaming cadastrados no banco de dados",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Retorna todas as streaming cadastradas", content = @Content(array = @ArraySchema(schema = @Schema(implementation = StreamingResponse.class))))
+    public ResponseEntity<List<StreamingResponse>> listarStreaming();
 
-    @GetMapping
-    public ResponseEntity<List<StreamingResponse>> listarStreaming() {
-        List<StreamingResponse> streaming = service.listarTodos()
-                .stream()
-                .map(StreamingMapper::toStreamingResponse)
-                .toList();
+    @Operation(summary = "Salvar Serviços de Streaming", description = "Metodo responsavel por cadastrar e salvar novos serviços de streaming no banco de dados")
+    @ApiResponse(responseCode = "201", description = "Streaming salvo com sucesso", content = @Content(schema = @Schema(implementation = StreamingResponse.class)))
+    public ResponseEntity<StreamingResponse> cadastrarStreaming(@Valid @RequestBody StreamingRequest request);
 
-        return ResponseEntity.ok(streaming);
-    }
+    @Operation(summary = "Busca Serviços de Streaming pelo ID", description = "Metodo responsavel por buscar serviços de streaming pelo ID",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Streaming encontrado com sucesso", content = @Content(schema = @Schema(implementation = StreamingResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Streaming não encontrado", content = @Content())
+    public ResponseEntity<StreamingResponse> buscarPorId(@PathVariable Long id);
 
-    @PostMapping
-    public ResponseEntity<StreamingResponse> cadastrarStreaming(@Valid @RequestBody StreamingRequest request) {
-        StreamingModel newStreming = StreamingMapper.toStreaming(request);
-        StreamingModel saveStreming = service.cadastrarStreaming(newStreming);
-        var streaming = StreamingMapper.toStreamingResponse(saveStreming);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(streaming);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<StreamingResponse> buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id)
-                .map(streaming -> ResponseEntity.ok(StreamingMapper.toStreamingResponse(streaming)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deletarPorId(@PathVariable Long id) {
-        if (service.buscarPorId(id).isPresent()) {
-            service.deletarStreaming(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("ID " + id + " não existe em nosso registros");
-        }
-    }
-
-
-
+    @Operation(summary = "Deleta Streaming por ID", description = "Metodo responsavel por deletar Streaming pelo ID",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "204", description = "Streaming deletado com sucesso", content = @Content())
+    @ApiResponse(responseCode = "404", description = "Streaming não encontrado", content = @Content())
+    public ResponseEntity<?> deletarPorId(@PathVariable Long id);
 
 }
