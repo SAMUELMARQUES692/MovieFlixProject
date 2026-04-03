@@ -4,11 +4,13 @@ import dev.com.movieflix.config.TokenService;
 import dev.com.movieflix.dto.UserDTO;
 import dev.com.movieflix.dto.request.LoginRequest;
 import dev.com.movieflix.dto.response.LoginResponse;
+import dev.com.movieflix.exception.UsernameOrPasswordInvalidException;
 import dev.com.movieflix.model.UserModel;
 import dev.com.movieflix.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +34,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.email(), request.password());
-        Authentication authenticate = authenticationManager.authenticate(userAndPass);
+        try {
+            UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+            Authentication authenticate = authenticationManager.authenticate(userAndPass);
 
-        UserModel userModel = (UserModel)authenticate.getPrincipal();
+            UserModel userModel = (UserModel)authenticate.getPrincipal();
 
-       String token = tokenService.generateToken(userModel);
+            String token = tokenService.generateToken(userModel);
 
-       return ResponseEntity.ok(new LoginResponse(token));
+            return ResponseEntity.ok(new LoginResponse(token));
+
+        }catch (BadCredentialsException exception) {
+            throw new UsernameOrPasswordInvalidException("Usuario ou senha invalido");
+        }
     }
 
     @GetMapping("/listar")

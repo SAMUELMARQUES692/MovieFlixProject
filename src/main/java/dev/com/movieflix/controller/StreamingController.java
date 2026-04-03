@@ -5,6 +5,7 @@ import dev.com.movieflix.dto.response.StreamingResponse;
 import dev.com.movieflix.mapper.StreamingMapper;
 import dev.com.movieflix.model.StreamingModel;
 import dev.com.movieflix.service.StreamingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class StreamingController {
     }
 
     @PostMapping
-    public ResponseEntity<StreamingResponse> cadastrarStreaming(@RequestBody StreamingRequest request) {
+    public ResponseEntity<StreamingResponse> cadastrarStreaming(@Valid @RequestBody StreamingRequest request) {
         StreamingModel newStreming = StreamingMapper.toStreaming(request);
         StreamingModel saveStreming = service.cadastrarStreaming(newStreming);
         var streaming = StreamingMapper.toStreamingResponse(saveStreming);
